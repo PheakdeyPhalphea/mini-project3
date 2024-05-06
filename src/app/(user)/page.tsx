@@ -3,17 +3,21 @@ import CardComponet from "@/components/CardComponent/CardComponet";
 import CategoryComponent from "@/components/CategoryComponent/CategoryComponent";
 import { CartProductType } from "@/lib/definitions";
 import { useGetProductsQuery } from "@/redux/service/e-commerce";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
+  const { data: session } = useSession();
+  console.log(session);
   const { data } = useGetProductsQuery({
     page: currentPage,
     pageSize: 10,
   });
   const products = data?.results ?? [];
+
   const totalPages = 10;
   return (
     <main>

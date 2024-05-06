@@ -2,6 +2,7 @@
 import "@/app/globals.css";
 import SessionWrapper from "../SessionProvider";
 import NavbarComponent from "@/components/NavbarComponent/NavbarComponent";
+import StoreProvider from "../StoreProvider";
 export default function RootLayout({
   children,
 }: {
@@ -10,9 +11,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionWrapper>
-        <body>
-          {children}
-        </body>
+        <StoreProvider>
+          <body>{children}</body>
+        </StoreProvider>
       </SessionWrapper>
     </html>
   );

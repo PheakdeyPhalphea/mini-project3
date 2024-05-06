@@ -1,9 +1,67 @@
 "use client";
+import { fetchUserProfile } from "@/redux/features/userProfile/userProfileSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import * as Yup from "yup"; // Import Yup package
+import style from "./style.module.css";
+import { IoEyeOffSharp } from "react-icons/io5";
+import { IoEyeSharp } from "react-icons/io5";
+import { useRouter } from "next/navigation";
+
+type ValueTypes = {
+  email: string;
+  password: string;
+};
+
+const initialValues: ValueTypes = {
+  email: "",
+  password: "",
+};
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Required"),
+  password: Yup.string().required("Required"),
+});
 
 export default function Login() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const route = useRouter();
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+    // Toggle password visibility
+  };
+
+  //  handle submit
+  const handleSubmit = (values: ValueTypes) => {
+    setLoading(true);
+    fetch(`http://localhost:3000/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        route.push("/");
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  };
+
   const { data: session } = useSession();
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchUserProfile());
+  }, []);
   // checking if sessions exists
   if (session) {
     <main className="w-full h-screen flex flex-col justify-center items-center">
@@ -85,33 +143,72 @@ export default function Login() {
                     Or Sign In with e-mail
                   </div>
                 </div>
-
+                {/* sign in form */}
                 <div className="mx-auto max-w-xs">
-                  <input
-                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                    type="email"
-                    placeholder="Email"
-                  />
-                  <input
-                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                    type="password"
-                    placeholder="Password"
-                  />
-                  <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                    <svg
-                      className="w-6 h-6 -ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                      <circle cx="8.5" cy="7" r="4" />
-                      <path d="M20 8v6M23 11h-6" />
-                    </svg>
-                    <span className="ml-3">Sign In</span>
-                  </button>
+                  <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={(values, actions) => {
+                      handleSubmit(values);
+                    }}
+                  >
+                    <Form className=" p-2 rounded-lg w-full">
+                      {/* Email */}
+                      <div className="mb-5">
+                        <label className={`${style.label}`} htmlFor="email">
+                          Email
+                        </label>
+                        <Field
+                          type="email"
+                          name="email"
+                          id="email"
+                          className={`${style.input}`}
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="section"
+                          className={`${style.error}`}
+                        />
+                      </div>
+
+                      {/* Password */}
+                      <div className="mb-5">
+                        <label className={`${style.label}`} htmlFor="password">
+                          Password
+                        </label>
+                        <div className="relative">
+                          <Field
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            id="password"
+                            className={`${style.input}`}
+                          />
+                          {!showPassword ? (
+                            <IoEyeOffSharp
+                              onClick={() => handleShowPassword()}
+                              className="cursor-pointer absolute right-2 top-4"
+                            />
+                          ) : (
+                            <IoEyeSharp
+                              onClick={() => handleShowPassword()}
+                              className="cursor-pointer absolute right-2 top-4"
+                            />
+                          )}
+                        </div>
+                        <ErrorMessage
+                          name="password"
+                          component="section"
+                          className={`${style.error}`}
+                        />
+                      </div>
+
+                      {/* button submit */}
+                      <button type="submit" className={`${style.button}`}>
+                        Submit
+                      </button>
+                    </Form>
+                  </Formik>
+                  {/* footer */}
                   <p className="mt-6 text-xs text-gray-600 text-center">
                     I agree to abide by templatana's
                     <a

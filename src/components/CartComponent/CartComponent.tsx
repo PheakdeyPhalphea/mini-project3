@@ -1,5 +1,5 @@
 import { CartProductType } from "@/lib/definitions";
-import React from "react";
+import cartSlice, { addToCart } from "@/redux/features/cart/cartSlice";
 
 export default function CartComponent({
   name,

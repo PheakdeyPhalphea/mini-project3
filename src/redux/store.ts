@@ -10,13 +10,14 @@ export const makeStore = () => {
   return configureStore({
     reducer: {
       // Add the generated reducer as a specific top-level slice
-       [ecommerceApi.reducerPath]: ecommerceApi.reducer,
+      [ecommerceApi.reducerPath]: ecommerceApi.reducer,
       counter: counterSlice,
       cart: cartSlice,
       userProfile: userProfileSlice,
       // auth: authSlice
     },
-     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(ecommerceApi.middleware),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(ecommerceApi.middleware),
   });
 };
 

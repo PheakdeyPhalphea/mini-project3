@@ -12,12 +12,15 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartProductType>) => {
-      const productExists = state.products.some(
-        (product) => product.id === action.payload.id
+      const productToAdd = action.payload;
+      const existingProductIndex = state.products.findIndex(
+        (product) => product.id === productToAdd.id
       );
-      if (!productExists) {
-        state.products.push(action.payload);
-        const price: number = parseFloat(action.payload.price.toString());
+      const price = parseFloat(productToAdd.price.toString());
+      if (existingProductIndex === -1) {
+        state.products.push(productToAdd);
+        state.totalPrice += price;
+      } else {
         state.totalPrice += price;
       }
     },

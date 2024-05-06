@@ -4,6 +4,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { CartProductType } from "@/lib/definitions";
 import { addToCart } from "@/redux/features/cart/cartSlice";
 import { increment } from "@/redux/features/counter/counterSlice";
+import Link from "next/link";
 export default function CardComponet({
   id,
   name,
@@ -14,13 +15,13 @@ export default function CardComponet({
   const dispatch = useAppDispatch();
   return (
     <div className="w-72 bg-secondaryColor rounded-xl ">
-      <a href={`product/${id}`}>
+      <Link href={`product/${id}`}>
         <img
           src={image}
           alt="Product"
           className="h-80 w-72 object-cover rounded-t-xl duration-500 hover:scale-105"
         />
-      </a>
+      </Link>
       <div className="px-4 py-3 w-72">
         <span className="text-gray-400 mr-3 uppercase text-xs">{seller}</span>
         <p className="text-lg font-bold text-AscendColor truncate block capitalize">

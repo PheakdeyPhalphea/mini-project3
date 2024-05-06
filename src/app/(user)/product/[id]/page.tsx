@@ -12,7 +12,6 @@ export default function page({ params }: Params) {
   const id = params.id;
   const { data } = useGetProductByIdQuery(id);
   const product = data as productType;
-  console.log(product);
   if (!product) {
     // Handle the case where product is undefined
     return <div>Loading...</div>;
