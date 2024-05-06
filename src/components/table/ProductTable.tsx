@@ -1,6 +1,7 @@
 "use client";
 import { BASE_URL } from "@/lib/constants";
 import { productType } from "@/lib/definitions";
+import { useGetProductsQuery } from "@/redux/service/e-commerce";
 import { Dropdown, DropdownItem, Modal } from "flowbite-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
@@ -22,18 +23,23 @@ export default function UserTable() {
   const [productDetails, setProductDetails] = useState<productType>();
   const [openModal, setOpenModal] = useState(false);
   const [openModalUpate, setOpenModalUpate] = useState(false);
-  const [getProduct, setProduct] = useState([]);
+  // const [getProduct, setProduct] = useState([]);
 
   const fieldStyle = "border border-gray-300 rounded-md";
-  async function fetchData() {
-    const data = await fetch(`${BASE_URL}/api/products?page_size=100`);
-    const res = await data.json();
-    setProduct(res.results);
-  }
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // async function fetchData() {
+  //   const data = await fetch(`${BASE_URL}/api/products?page_size=100`);
+  //   const res = await data.json();
+  //   setProduct(res.results);
+  // }
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
+  const { data } = useGetProductsQuery({
+    page: 1,
+    pageSize: 100,
+  });
+  const products = data?.results ?? [];
   const columns: TableColumn<productType>[] = [
     {
       name: "ID",
@@ -259,7 +265,7 @@ export default function UserTable() {
       </Modal>
       <DataTable
         columns={columns}
-        data={getProduct}
+        data={products}
         fixedHeader={true}
         fixedHeaderScrollHeight="600px"
         selectableRows

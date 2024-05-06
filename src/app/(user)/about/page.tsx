@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import React from "react";
-
+export const metadata: Metadata = {
+  title: "about",
+  description: "This is about Page Shop",
+  keywords: ["shop", "ecommerce", "dashBoard"],
+};
 export default function page() {
   return (
     <section className="pt-10 overflow-hidden bg-gray-50  md:pt-0 sm:pt-16 2xl:pt-16">
@@ -9,7 +14,7 @@ export default function page() {
             <h2 className="text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl lg:text-5xl">
               Hey 👋 I am
               <br className="block sm:hidden" />
-                Pheakdey
+              Pheakdey
             </h2>
             <p className="max-w-lg mt-3 text-xl leading-relaxed text-AscendColor dark:text-gray-300 md:mt-8">
               I Am CSTAD Student Current This is My Mini-Project About
